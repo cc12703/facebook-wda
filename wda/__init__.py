@@ -256,6 +256,10 @@ def _start_wda_xctest(udid: str, wda_bundle_id=None) -> bool:
         return False
     return True
 
+class MediaType(str, enum.Enum):
+    IMAGE = 'image'
+    VIDEO = 'video'
+
 
 class BaseClient(object):
     def __init__(self, url=None, _session_id=None):
@@ -532,6 +536,43 @@ class BaseClient(object):
         if accessible:
             return self.http.get('/wda/accessibleSource').value
         return self.http.get('source?format=' + format).value
+
+    def saveMedia(self, file: str, type: MediaType, album: str = None):
+        """
+        save media to phone photos. if album not exists, create album.
+
+        Args:
+            file: media file url;
+            type: MediaType image or video;
+            album: media save album;
+
+        Returns:
+            bool: save media result. True or False;
+        """
+        with open(file, "rb") as f:
+            data = f.read()
+
+        encode_data = base64.b64encode(data).decode("utf-8")
+        body = dict()
+        body['data'] = encode_data
+        body['type'] = type
+        if album:
+            body['album'] = album
+        response = self._session_http.post('saveMedia', body)
+        return False if response.value else True
+
+
+    def deleteAlbum(self, album: str):
+        """
+        delete all photos from assign phone album
+        Args:
+            album: need delete album name;
+
+        Returns:
+            bool: delete result, True or False
+        """
+        response = self._session_http.post('deleteAlbum', {'album': album})
+        return False if response.value else True
 
     def screenshot(self, png_filename=None, format='pillow'):
         """

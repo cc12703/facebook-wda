@@ -91,3 +91,4 @@ ENV/
 .vscode
 .DS_Store
 *.code-workspace
+/.idea
