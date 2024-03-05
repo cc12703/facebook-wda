@@ -4,10 +4,14 @@
 #
 
 import os
-import time
+import sys
+
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../wda")
+
+
 import wda
-import requests
-from logzero import logger
 
 
 bundle_id = 'com.apple.Preferences'
@@ -21,12 +25,12 @@ def test_preferences(c: wda.Client):
     # assert "</XCUIElementTypeApplication>" in page_source
 
     app = c.session(bundle_id)
-    selector = app(label="蜂窝网络")
+    selector = app(label="Wi-Fi")
     el = selector.get() 
     el.click()
     print("Element bounds:", el.bounds)
 
-    logger.info("Take screenshot: %s", app.screenshot())
+    print("Take screenshot: %s", app.screenshot())
     
     app.swipe_right()
     app.swipe_up()
@@ -95,12 +99,14 @@ def test_invalid_session(c: wda.Client):
 
 
 if __name__ == "__main__":
-    c = wda.USBClient()
-    # c.healthcheck() # 恢复WDA状态
+    #c = wda.USBClient()
+    c = wda.Client("http://localhost:8100")
+    #c.status()
+    #c.healthcheck() # 恢复WDA状态
     # test_error_callback(c)
     # test_elememt_operation(c)
-    # test_preferences(c)
+    test_preferences(c)
     # test_open_safari(c)
     # test_xpath(c)
-    wda.DEBUG = True
-    test_invalid_session(c)
+    #wda.DEBUG = True
+    #test_invalid_session(c)

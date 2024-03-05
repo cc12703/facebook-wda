@@ -895,7 +895,7 @@ class BaseClient(object):
                 "TMQ_ORIGIN") == "civita":  # in TMQ and belong to MDS
             return self._session_http.post("/mds/touchAndHold",
                                            dict(x=x, y=y, duration=0.02))
-        return self._session_http.post('/wda/tap/0', dict(x=x, y=y))
+        return self._session_http.post('/wda/tap', dict(x=x, y=y))
 
     def _percent2pos(self, x, y, window_size=None):
         if any(isinstance(v, float) for v in [x, y]):
@@ -1803,6 +1803,7 @@ class USBClient(Client):
             elif len(infos) >= 2:
                 raise RuntimeError("more then one device connected")
             udid = infos[0]['SerialNumber']
+
 
         super().__init__(url=requests_usbmux.DEFAULT_SCHEME + "{}:{}".format(udid, port))
         if self.is_ready():
