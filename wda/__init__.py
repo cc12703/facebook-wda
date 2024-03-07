@@ -574,6 +574,20 @@ class BaseClient(object):
         response = self._session_http.post('deleteAlbum', {'album': album})
         return False if response.value else True
 
+    def getPhotosCount(self, album: str):
+        """
+        get photos count from album.
+        Args:
+            album: album name;
+
+        Returns:
+            int: photos count
+        """
+
+        response = self._session_http.post('photosCount', {'album': album})
+        return response.value if response.value else 0
+
+
     def screenshot(self, png_filename=None, format='pillow'):
         """
         Screenshot with PNG format
